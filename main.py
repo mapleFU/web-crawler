@@ -1,6 +1,22 @@
 from Scrapying import scratchOnVijos
 import pymysql
 
+# TODO: make clear here
+conn = pymysql.connect(
+    host='127.0.0.1',
+    port=3306,
+    user='root',
+    passwd='anmmscs2maple',
+    db='scratch'
+)
+conn.set_charset('utf8')
+
+cur = conn.cursor()
+cur.execute('SET NAMES utf8;')
+cur.execute('SET CHARACTER SET utf8;')
+cur.execute('SET character_set_connection=utf8;')
+cur.execute('USE scratch')
+
 
 students_info = list()
 user_sets = set()
@@ -24,14 +40,14 @@ with open('msg.txt', 'w') as f:
         # f.write('用户 {} 排名{}, 解决了{}道题\n'.format(users[0], msg[2], msg[0]))
         all_users.append((users[0], msg[2], msg[0]))
 
-pymysql.connect()
-conn = pymysql.connect(host='127.0.0.1', port=3306, user='root', passwd=None, db='mysql')
-cur = conn.cursor()
-cur.execute('USE scratch')
-
 
 def store(content):
-    sqls = "INSERT INTO vijos (name, rank, solve) VALUES (\"{}\", \"{}\", \"{}\")".format(content[0], content[1], content[2])
+    sqls = "INSERT INTO vijos (name, rank, solve) VALUES " \
+           "(\"{0}\", \"{1}\", \"{2}\") ON DUPLICATE KEY UPDATE rank = {1}, solve = {2}".format(
+        content[0],
+        content[1],
+        content[2]
+    )
     print(sqls)
     cur.execute(sqls)
     cur.connection.commit()
