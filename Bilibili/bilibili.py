@@ -62,11 +62,8 @@ def cmp(record):
         return float(to_cmp)
 
 
-def fun():
+def main():
     response: requests.Response = requests.get('http://bangumi.bilibili.com/web_api/timeline_global')
-    # with open('bilibili.json', 'r') as f:
-    # l = response.json()
-    # print(l['result'])
     records = []
     recorded_title = set()
 
@@ -91,4 +88,4 @@ def fun():
 
 
 if __name__ == '__main__':
-    fun()
+    main()
